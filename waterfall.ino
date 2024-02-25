@@ -1,20 +1,5 @@
-// A basic everyday NeoPixel strip test program.
-
-// NEOPIXEL BEST PRACTICES for most reliable operation:
-// - Add 1000 uF CAPACITOR between NeoPixel strip's + and - connections.
-// - MINIMIZE WIRING LENGTH between microcontroller board and first pixel.
-// - NeoPixel strip's DATA-IN should pass through a 300-500 OHM RESISTOR.
-// - AVOID connecting NeoPixels on a LIVE CIRCUIT. If you must, ALWAYS
-//   connect GROUND (-) first, then +, then data.
-// - When using a 3.3V microcontroller with a 5V-powered NeoPixel strip,
-//   a LOGIC-LEVEL CONVERTER on the data line is STRONGLY RECOMMENDED.
-// (Skipping these may work OK on your workbench but can fail in the field)
-
-// board length is about 31.5 inches
-
-// HOOKUP GUIDE
 /*
-TOF SENSOR
+TOF SENSOR HOOKUP GUIDE
 
 GNF -> GND
 3.3V -> 3.3V
@@ -60,7 +45,6 @@ VL53L1X sensor;
 bool reverse = false; // make particles go other way
 bool showPlat = false; // show where hand/platform is detected
 bool fading = true; // dots fade out after exceeding maxBounces
-bool smoothing = false; // does not work
 
 int alive[MAX_PARTICLES]; // 0 dead, 1 alive
 int dying[MAX_PARTICLES]; // 0 alive/dead, 1 dying
@@ -80,7 +64,6 @@ const float ground = 31.5;//40.0; // lowest point is ~40inches from top of strip
 float plat = ground; // "platform" particles bounce off of
 const float ledDist = ground/LED_COUNT; // physical space between leds
 const float spawnChance = 0.00001; // chance of new particle every cycle
-float low = 0.0;//140.0; // value read from sensor when hand is at lowest led
 float high = 0; // value read from sensor when hand is at highest led
 const int maxBounces = 2;
 const int fadeSpeed = 3;
@@ -123,13 +106,6 @@ void setup() {
   Serial.println("new program");
 
   //Serial.println(alive[0]);
-
-  //spawnParticle(0, 0, 0, 0, strip.ColorHSV(20000));
-  //spawnParticle(1, 0, 3, 0, strip.ColorHSV(22000));
-  //spawnParticle(2, 0, 5, 0, strip.ColorHSV(24000));
-  //spawnParticle(3, 0, 7, 0, strip.ColorHSV(26000));
-  //spawnParticle(4, 0, 9, 0, strip.ColorHSV(28000));
-  //spawnParticle(5, 0, 11, 0, strip.ColorHSV(30000));
 }
 
 void loop() {
@@ -142,8 +118,6 @@ void loop() {
   }
 
   updatePlat();
-
-  //Serial.println("dist: " + String(sensor.read()));
 
   // calculate particles
   if (particles < MAX_PARTICLES && random(50.0) < (spawnChance)){
@@ -286,14 +260,12 @@ int getLED(int particle){
 }
 
 // reads from sensor and update position of hand/platform
-// REVISE
 void updatePlat(){
   float reading = (float)sensor.read();
   
 
   if (reading != 0){
     Serial.println(reading);
-    //plat = ((float)map(reading, low, high, 0, ground));
 
     if (reading > 500 && reading < high-40){
       //reading -= 0.2*reading;
@@ -316,7 +288,6 @@ float ledToWorld(int led){
 }
 
 // converts world coordinates to LED coordinates
-// REVISE
 int worldToLed(float pos){
   int l = (int) round((pos/ground) * LED_COUNT);
   //int l = map(pos/ground, 0, 1, 0, LED_COUNT);
